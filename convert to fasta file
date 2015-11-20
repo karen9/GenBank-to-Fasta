@@ -1,0 +1,30 @@
+Karen Méndez
+karenmendez9404@gmail.com
+
+                                      Get a fasta file from a GenBank file
+
+awk 'NR<4' tragopan > tragopan1 ## print first three lines from tragopan file and create a file call tragopan1
+
+cat tragopan1 | tr '\n' ' ' > tragopan2 ## join lines leaving a space between them and create a file
+
+awk 'NR==1 {print $1$2"_"$3"_"$4"_"$5"_"$6"_"$7"_"$8"_"$10"_"$11"_"$12"_"$13"_"$14"_"$15}' tragopan2 | sed 's/LOCUS/>/g' > tragopan3 ## Print first field, add sign _ among each character and change word LOCUS by >
+
+awk 'NR>32 {print $2 $3 $4 $5 $6 $7}' tragopan > tragopan4 ## print sequences without numbers
+ 
+cat tragopan1 tragopan4 > out.fas ## join the file with descriptors of the organism and the sequence file
+
+########Join several fasta files in one
+
+cat out.fas tyrannus.fas nyctibius.fas > all.fas
+
+grep -c "^>" all.fas ## count number of sequences in a fasta file
+
+sed -e 's/\(^>.*$\)/#\1#/' all.fas | tr -d "\r" | tr -d "\n" | sed -e 's/$/#/' | tr "#" "\n" | sed -e '/^$/d' > all.fas ## linearize the sequences
+
+awk '/^>/ {print; next;} {seq = length($0); print seq}' xx.fas > xx.fas ## count the number of base pairs of each sequence
+
+ 
+
+
+
+
